@@ -11,8 +11,11 @@
   "author": "sqrtthree <imsqrtthree@gmail.com>",
   "license": "GPL-3.0",
   "dependencies": {
+    "@octokit/rest": "^16.25.3",
     "github": "^10.1.0",
     "micro": "^8.0.4",
-    "pino": "^4.7.1"
+    "pangu": "^4.0.7",
+    "pino": "^4.7.1",
+    "remark": "^10.0.1"
   }
 }

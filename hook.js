@@ -2,7 +2,7 @@ const { json, send } = require('micro')
 const GitHubApi = require('github')
 const pino = require('pino')
 const config = require('./config')
-
+const fixPr = require('./fixpr')
 const pretty = pino.pretty()
 
 pretty.pipe(process.stdout)
@@ -170,13 +170,18 @@ const handleApplyForReview = async function (payload) {
 const handleNewPull = async function (payload) {
   const { pull_request: pull, sender } = payload
 
-  logger.debug(`Trying to add label "校对认领" to pull ${pull.number}.`)
+  const isManager=/^(C|c)reate.+.md$/.test(pull.title)
 
-  await Promise.all([
-    addLabels(pull.number, ['校对认领'])
-  ])
+  if(!isManager){
 
-  logger.debug(`Add label "校对认领" to pull ${pull.number} successfully.`)
+    logger.debug(`Trying to add label "校对认领" to pull ${pull.number}.`)
+
+    await Promise.all([
+      addLabels(pull.number, ['校对认领'])
+    ])
+  
+    logger.debug(`Add label "校对认领" to pull ${pull.number} successfully.`)
+  }
 
   const matchedIssueNumber = /#\d+/.exec(pull.body)
 
@@ -201,6 +206,8 @@ const handleNewPull = async function (payload) {
       }
     }
   }
+
+  fixPr(pull)
 }
 
 const handleNewIssue = async (payload) => {
