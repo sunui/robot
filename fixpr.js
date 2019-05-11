@@ -55,7 +55,7 @@ const getFile = function(sha) {
   });
 };
 
-const upDateFile = function(branch, path, sha, content) {
+const upDateFile = function({repo,owner,branch, path, sha, content}) {
   return github.repos.updateFile({
     repo,
     owner,
@@ -88,10 +88,14 @@ module.exports = async function(pull) {
 
       if (rowcontent !== newfile) {
         await upDateFile(
-          pull.head.ref,
-          fileinfo.filename,
-          fileinfo.sha,
-          newcontent
+          {
+            repo:pull.head.repo.name,
+            owner:pull.head.repo.owner.login,
+            branch:pull.head.ref,
+            path:fileinfo.filename,
+            sha:fileinfo.sha,
+            content:newcontent
+          }
         );
       }
       //TODO：提交报告
