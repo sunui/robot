@@ -14,8 +14,8 @@
     "@octokit/rest": "^16.25.3",
     "github": "^10.1.0",
     "micro": "^8.0.4",
-    "pangu": "git+https://git@github.com:sunui/pangu.js.git",
+    "pangu": "git+https://github.com/sunui/pangu.js.git",
     "pino": "^4.7.1",
-    "remark": "git+https://git@github.com:sunui/remark.git"
+    "remark": "git+https://github.com/sunui/remark.git"
   }
 }
