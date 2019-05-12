@@ -67,6 +67,15 @@ const upDateFile = function({repo,owner,branch, path, sha, content}) {
   });
 };
 
+const addComment = function addComment(issue_number, body) {
+  return github.issues.createComment({
+    owner,
+    repo,
+    issue_number,
+    body,
+  })
+}
+
 module.exports = async function(pull) {
   try {
     logger.debug(`Try to fix pull ${pull.number}.`);
@@ -74,7 +83,9 @@ module.exports = async function(pull) {
     const files = await getFiles(pull.number);
 
     if (files.data.length > 1) {
-      // TODO 多于一个文件不处理，提交一个 comment
+
+      addComment(pull.number,`@${pull.user.login} 您提交了多个文件，请检查。`)
+
     } else {
       const fileinfo = files.data[0];
 
