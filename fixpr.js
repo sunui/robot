@@ -105,9 +105,16 @@ module.exports = async function(pull) {
       const newfile = await fix(rowcontent);
       const newcontent = Buffer.from(newfile).toString("base64");
 
-      if (rowcontent !== newfile) {
 
-        const {head} =await getPull(pull.number)
+      let head=pull.head;
+      let user=pull.user;
+      if(!head){
+        const {data} =await getPull(pull.number)
+        head=data.head
+        user=data.user
+      }
+
+      if (rowcontent !== newfile) {
         await upDateFile(
           {
             repo:head.repo.name,
@@ -118,6 +125,8 @@ module.exports = async function(pull) {
             content:newcontent
           }
         );
+      }else{
+        addComment(pull.number,`@${user.login} 没发现什么问题。`)
       }
       //TODO：提交报告
     }
