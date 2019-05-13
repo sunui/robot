@@ -84,7 +84,7 @@ const addComment = function addComment(issue_number, body) {
   })
 }
 
-module.exports = async function(pull) {
+module.exports = async function(pull,sender) {
   try {
     logger.debug(`Try to fix pull ${pull.number}.`);
 
@@ -92,7 +92,7 @@ module.exports = async function(pull) {
 
     if (files.data.length > 1) {
 
-      addComment(pull.number,`@${pull.user.login} 您提交了多个文件，请检查。`)
+      addComment(pull.number,`@${sender.login} 您提交了多个文件，请检查。`)
 
     } else {
       const fileinfo = files.data[0];
@@ -126,7 +126,7 @@ module.exports = async function(pull) {
           }
         );
       }else{
-        addComment(pull.number,`@${user.login} 没发现什么问题。`)
+        addComment(pull.number,`@${sender.login} 没发现什么问题。`)
       }
       //TODO：提交报告
     }
