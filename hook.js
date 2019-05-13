@@ -162,6 +162,8 @@ const handleApplyForReview = async function (payload) {
       }
     }
     logger.debug(`Handle request of ${sender.login} from #${issue.number} with message ${comment.body} successfully .`)
+  }else if(includes(comment.body, ['@fanyijihua'])&&includes(comment.body, ['格式校验','校验格式','格式检查','检查格式','lint'])){
+    fixPr(issue)
   } else {
     logger.debug(`Can not handle request of ${sender.login} from #${issue.number} with message ${comment.body}.`)
   }

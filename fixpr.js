@@ -47,6 +47,14 @@ const getFiles = function(number) {
   });
 };
 
+const getPull = function(pull_number) {
+  return github.pulls.get({
+    owner,
+    repo,
+    pull_number
+  })
+};
+
 const getFile = function(sha) {
   return github.git.getBlob({
     owner,
@@ -98,11 +106,13 @@ module.exports = async function(pull) {
       const newcontent = Buffer.from(newfile).toString("base64");
 
       if (rowcontent !== newfile) {
+
+        const {head} =await getPull(pull.number)
         await upDateFile(
           {
-            repo:pull.head.repo.name,
-            owner:pull.head.repo.owner.login,
-            branch:pull.head.ref,
+            repo:head.repo.name,
+            owner:head.repo.owner.login,
+            branch:head.ref,
             path:fileinfo.filename,
             sha:fileinfo.sha,
             content:newcontent
