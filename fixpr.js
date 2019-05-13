@@ -125,10 +125,10 @@ module.exports = async function(pull,sender) {
             content:newcontent
           }
         );
+        addComment(pull.number,`@${sender.login} 帮你修复了一些格式问题，请查看。`)
       }else{
-        addComment(pull.number,`@${sender.login} 没发现什么问题。`)
+        addComment(pull.number,`@${sender.login} 👍 未发现格式问题。`)
       }
-      //TODO：提交报告
     }
   } catch (err) {
     return logger.error(err);

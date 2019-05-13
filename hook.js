@@ -92,14 +92,21 @@ const handleApplyForTranslation = async function (payload) {
   }
 }
 
-const handleApplyForReview = async function (payload) {
+const handleApplyForLint = async function (payload) {
   const { issue, comment, sender } = payload
 
     // 处理格式校验
     if(includes(comment.body, ['@fanyijihua'])&&includes(comment.body, ['格式校验','校验格式','格式检查','检查格式','lint'])){
-      await fixPr(issue,sender)
-      return
+      try{ 
+        await fixPr(issue,sender)
+      }catch(err) {
+        return logger.error(err)
+      }
     } 
+}
+
+const handleApplyForReview = async function (payload) {
+  const { issue, comment, sender } = payload
 
   let awaitReview = false
 
@@ -168,7 +175,7 @@ const handleApplyForReview = async function (payload) {
       }
     }
     logger.debug(`Handle request of ${sender.login} from #${issue.number} with message ${comment.body} successfully .`)
-  }else {
+  } else {
     logger.debug(`Can not handle request of ${sender.login} from #${issue.number} with message ${comment.body}.`)
   }
 }
@@ -237,6 +244,12 @@ module.exports = async (req, res) => {
     logger.error(`URL: ${req.url}, Message: ${err.message}`)
     logger.info(`--> ${req.method} ${req.url} 400`)
     return send(res, 400)
+  }
+
+  if (eventName === 'issue_comment' && payload.action === 'created') {
+    if (payload.issue.html_url.includes('pull')) {
+      handleApplyForLint(payload)
+    } 
   }
 
   if (payload.sender.login === 'leviding') {
